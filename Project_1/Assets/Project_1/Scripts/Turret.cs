@@ -8,14 +8,20 @@ public class Turret : MonoBehaviour
     public Transform player = null;
 
     public int health = 100;
+    public Color hitColor = Color.white;
 
     public float minDelay = 1.0f;
     public float maxDelay = 4.0f;
 
     private float lastTime = 0.0f;
     private float delayTime = 0.0f;
+    private Color originalColor = Color.white;
 
-	void Start ()
+    private void Awake()
+    {
+        originalColor = this.GetComponent<Renderer>().material.color;
+    }
+    void Start ()
 	{
 		
 	}
@@ -67,10 +73,20 @@ public class Turret : MonoBehaviour
 
             Debug.Log("Turrent hit for: " + hp + "  Turrent Health: " + health);
 
+            StartCoroutine(GetHit());
+
         }
         else
         {
             Destroy(this.gameObject);
         }
+    }
+
+    IEnumerator GetHit()
+    {
+        this.GetComponent<Renderer>().material.color = hitColor;
+        yield return new WaitForSeconds(0.4f);
+
+        this.GetComponent<Renderer>().material.color = originalColor;
     }
 }
