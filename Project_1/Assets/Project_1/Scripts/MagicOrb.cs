@@ -10,6 +10,7 @@ public class MagicOrb : MonoBehaviour
     public AudioClip audioShoot = null;
     public ParticleSystem particle = null;
 
+    private bool canMove = true;
 
     void Awake()
     {
@@ -28,7 +29,11 @@ public class MagicOrb : MonoBehaviour
 
     void MoveObject()
     {
-        this.transform.Translate( 0, 0, speed*Time.deltaTime );
+        if (canMove)
+        {
+            this.transform.Translate(0, 0, speed * Time.deltaTime);
+        }
+        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -36,7 +41,11 @@ public class MagicOrb : MonoBehaviour
         this.GetComponent<AudioSource>().PlayOneShot(audioHit);
         this.GetComponent<Renderer>().enabled = false;
         this.GetComponent<Collider>().enabled = false;
-        Destroy(this.gameObject, audioHit.length);
+        canMove = false;
+        var emissionEnabled = particle.emission;
+        emissionEnabled.enabled = false;
+;       Destroy(this.gameObject, audioHit.length);
+        
     }
 
 
